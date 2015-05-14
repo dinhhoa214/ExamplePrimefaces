@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      >
+    <h:head>
+        <title>Bank Primefaces JSF</title>
+    </h:head>
+    <h:body>
+        <h:form id="form1">
+            <p:panel header="Bank Primefaces JSF" style="width: 1100px; align: center;"> 
+                <p:dataTable var="acc" value="#{bank.accounts}">
+                    <f:facet name="header">  
+                        Account List  
+                    </f:facet> 
+                    <p:column>
+                        <f:facet name="header">  
+                            <h:outputText value="Item Name" />  
+                        </f:facet>
+                        <p:cellEditor>  
+                            <f:facet name="output">  
+                                <h:outputText value="#{acc.name}" />  
+                            </f:facet>  
+                            <f:facet name="input">  
+                                <p:inputText value="#{acc.name}" style="width:100%"/>  
+                            </f:facet>  
+                        </p:cellEditor> 
+                    </p:column>
+ 
+                    <p:column>
+                        <f:facet name="header">  
+                            <h:outputText value="Quantity" />  
+                        </f:facet>
+                        <p:cellEditor>  
+                            <f:facet name="output">  
+                                <h:outputText value="#{acc.modiferTime}" />  
+                            </f:facet>  
+                            <f:facet name="input">  
+                                <p:inputText value="#{acc.modiferTime}" style="width:100%"/>  
+                            </f:facet>  
+                        </p:cellEditor>
+                    </p:column>
+ 
+                    <p:column>
+                        <f:facet name="header">  
+                            <h:outputText value="Price" />  
+                        </f:facet>
+                        <p:cellEditor>  
+                            <f:facet name="output">  
+                                <h:outputText value="#{acc.status}" />  
+                            </f:facet>  
+                            <f:facet name="input">  
+                                <p:inputText value="#{acc.status}" style="width:100%"/>  
+                            </f:facet>  
+                        </p:cellEditor>
+                    </p:column>   
+                    <p:column>
+                        <f:facet name="header">  
+                            <h:outputText value="Price" />  
+                        </f:facet>
+                        <p:cellEditor>  
+                            <f:facet name="output">  
+                                <h:selectBooleanCheckbox value="#{acc.isPublic}" />  
+                            </f:facet>  
+                            <f:facet name="input">  
+                                <p:inputText value="#{acc.isPublic}" style="width:100%"/>  
+                            </f:facet>  
+                        </p:cellEditor>
+                    </p:column>             
+                    <p:column headerText="Options"  >  
+                        <h:commandButton value="Del Account" action="#{bank.deleteAccount(acc)}"/>  
+                    </p:column> 
+                </p:dataTable>
+                <p:spacer height="30px;"/>
+                <p:growl id="messages" showDetail="true"/>
+            
+                <p:panelGrid columns="2">
+                    <p:outputLabel value="Name: " />
+				<p:inputText value="#{bank.name}" />
+			<p:outputLabel value="Modifer Time: " />			  
+    			<p:calendar id="datetime" value="#{bank.modiferTime}" pattern="MM/dd/yyyy HH:mm:ss" />  	 
+    		<p:outputLabel value="Status:" />
+    		 
+		        <p:selectOneMenu id="status" value="#{bank.status}">
+		            <f:selectItem itemLabel="Dang su dung" itemValue="Dang su dung" />
+		            <f:selectItem itemLabel="Tam khoa" itemValue="Tam khoa" />
+		            <f:selectItem itemLabel="Het han" itemValue="Het han" />
+		        </p:selectOneMenu>
+    		<p:outputLabel value="Public: " /> 
+        		<p:selectBooleanButton id="isPublic" value="#{bank.isPublic}" onLabel="Yes" offLabel="No" onIcon="ui-icon-check" offIcon="ui-icon-close" style="width:90px"/>	
+			<p:outputLabel value=" " /> 
+                    <f:facet name="footer">
+                        <h:commandButton value="Add Account" action="#{bank.addAccount}"/>
+                    </f:facet>
+                </p:panelGrid>
+                <p:spacer height="30px;"/>
+            </p:panel>
+        </h:form>
+    </h:body>
+</html>

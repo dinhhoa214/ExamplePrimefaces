@@ -4,9 +4,13 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean; 
 import javax.annotation.PostConstruct; 
 import javax.faces.bean.ManagedProperty;
+import javax.faces.context.FacesContext;
+
+import org.primefaces.event.RowEditEvent;
  
 
 @ManagedBean(name="bank") 
@@ -98,4 +102,14 @@ public class BankBean implements Serializable{
 	public void deleteAccount(Account account){ 
 		accounts.remove(account); 
 	}
+	public void onEdit(RowEditEvent event) {  
+        FacesMessage msg = new FacesMessage("Account Edited",((Account) event.getObject()).getName());  
+        FacesContext.getCurrentInstance().addMessage(null, msg);  
+    }  
+       
+    public void onCancel(RowEditEvent event) {  
+        FacesMessage msg = new FacesMessage("Item Cancelled");   
+        FacesContext.getCurrentInstance().addMessage(null, msg); 
+        accounts.remove((Account) event.getObject());
+    }
 }
