@@ -1,5 +1,7 @@
 package com.asiantech.model;
  
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public  class Account{
@@ -29,7 +31,11 @@ public  class Account{
 		return modiferTime;
 	}
 	public void setModiferTime(Date modiferTime) {
-		this.modiferTime = modiferTime;
+		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		System.out.print(dateFormat);
+		   //get current date time with Date()
+		   Date date = new Date();
+		this.modiferTime = date;
 	}
 	public String getStatus() {
 		return status;

@@ -5,98 +5,120 @@
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:ui="http://java.sun.com/jsf/facelets"
       >
-    <h:head>
+<h:head>
         <title>Bank Primefaces JSF</title>
-    </h:head>
-    <h:body>
-        <h:form id="form1">
-            <p:panel header="Bank Primefaces JSF" style="width: 1100px; align: center;"> 
-                <p:dataTable var="acc" value="#{bank.accounts}">
-                    <f:facet name="header">  
+        <h:outputStylesheet library="primefaces-sunny" name="theme.css" />
+</h:head>
+<h:body> 
+	<h:form id="form">
+        	<p:growl id="msgs" showDetail="true" /> 
+ 	<p:panel header="Bank Primefaces JSF @Author: Nguyen Dinh Hoa"    layout="block"> 
+                 
+   	<p:dataTable rowIndexVar="rowIndex" var="acc" value="#{bank.accounts}" editable="true" widgetVar="accsTable"
+   	emptyMessage="No account found! " filteredValue="#{bank.accountsFiller}" style="margin-top:20px; align:center;" >
+     	<f:facet name="header">  
                         Account List  
-                    </f:facet> 
-                    <p:column>
-                        <f:facet name="header">  
-                            <h:outputText value="Item Name" />  
-                        </f:facet>
-                        <p:cellEditor>  
-                            <f:facet name="output">  
-                                <h:outputText value="#{acc.name}" />  
-                            </f:facet>  
-                            <f:facet name="input">  
-                                <p:inputText value="#{acc.name}" style="width:100%"/>  
-                            </f:facet>  
-                        </p:cellEditor> 
-                    </p:column>
+   		</f:facet>                
+        <f:facet name="header">
+            <p:outputPanel style="text-align:right;" layout="block">
+                <h:outputText value="Search all fields:" />
+                <p:inputText id="globalFilter" onkeyup="PF('accsTable').filter()" style="width:150px" placeholder="Enter keyword"/>
+            </p:outputPanel>
+        </f:facet>              
+    	<p:column headerText="#" style="width:3%">
+                #{rowIndex+1}
+    	</p:column>
+                        
+                    <p:ajax event="rowEdit" listener="#{bank.onRowEdit}" update=":form:msgs" />
+       				<p:ajax event="rowEditCancel" listener="#{bank.onRowCancel}" update=":form:msgs" />
+       	 
+ 		<p:column headerText="Name" sortBy="#{acc.name}" filterBy="#{acc.name}" 
+ 		footerText=" " filterMatchMode="contains">   
+       				
+           <p:cellEditor>
+               <f:facet name="output"><h:outputText value="#{acc.name}" /></f:facet>
+               <f:facet name="input"><p:inputText id="modelInput" value="#{acc.name}" style="width:100%"/></f:facet>
+           </p:cellEditor>
+       </p:column>
+ 		
+       <p:column headerText="Modifer Time"  sortBy="#{acc.modiferTime}" style="width:300px;"
+		filterBy="#{acc.modiferTime}" 
+ 		footerText=" " filterMatchMode="contains"> 
+           <p:cellEditor>
+               <f:facet name="output"><h:outputText value="#{acc.modiferTime}" /></f:facet>
+               
+               <f:facet name="input"> 
+               		<p:calendar value="#{acc.modiferTime}" mindate="getDate()" maxdate="getDate()" />	
+               </f:facet>
+           </p:cellEditor>
+       </p:column>
  
-                    <p:column>
-                        <f:facet name="header">  
-                            <h:outputText value="Quantity" />  
-                        </f:facet>
-                        <p:cellEditor>  
-                            <f:facet name="output">  
-                                <h:outputText value="#{acc.modiferTime}" />  
-                            </f:facet>  
-                            <f:facet name="input">  
-                                <p:inputText value="#{acc.modiferTime}" style="width:100%"/>  
-                            </f:facet>  
-                        </p:cellEditor>
-                    </p:column>
- 
-                    <p:column>
-                        <f:facet name="header">  
-                            <h:outputText value="Price" />  
-                        </f:facet>
-                        <p:cellEditor>  
-                            <f:facet name="output">  
-                                <h:outputText value="#{acc.status}" />  
-                            </f:facet>  
-                            <f:facet name="input">  
-                                <p:inputText value="#{acc.status}" style="width:100%"/>  
-                            </f:facet>  
-                        </p:cellEditor>
-                    </p:column>   
-                    <p:column>
-                        <f:facet name="header">  
-                            <h:outputText value="Price" />  
-                        </f:facet>
-                        <p:cellEditor>  
-                            <f:facet name="output">  
-                                <h:selectBooleanCheckbox value="#{acc.isPublic}" />  
-                            </f:facet>  
-                            <f:facet name="input">  
-                                <p:inputText value="#{acc.isPublic}" style="width:100%"/>  
-                            </f:facet>  
-                        </p:cellEditor>
-                    </p:column>             
-                    <p:column headerText="Options"  >  
-                        <h:commandButton value="Del Account" action="#{bank.deleteAccount(acc)}"/>  
-                    </p:column> 
-                </p:dataTable>
-                <p:spacer height="30px;"/>
-                <p:growl id="messages" showDetail="true"/>
-            
-                <p:panelGrid columns="2">
-                    <p:outputLabel value="Name: " />
-				<p:inputText value="#{bank.name}" />
-			<p:outputLabel value="Modifer Time: " />			  
-    			<p:calendar id="datetime" value="#{bank.modiferTime}" pattern="MM/dd/yyyy HH:mm:ss" />  	 
-    		<p:outputLabel value="Status:" />
-    		 
-		        <p:selectOneMenu id="status" value="#{bank.status}">
+       <p:column headerText="Status"  sortBy="#{acc.status}"
+		filterBy="#{acc.status}" 
+ 		footerText=" " filterMatchMode="contains"> 
+           <p:cellEditor>
+               <f:facet name="output"><h:outputText value="#{acc.status}" /></f:facet>
+               <f:facet name="input" ><p:selectOneMenu id="status" value="#{acc.status}"  style="width:200px;"> 
 		            <f:selectItem itemLabel="Dang su dung" itemValue="Dang su dung" />
 		            <f:selectItem itemLabel="Tam khoa" itemValue="Tam khoa" />
 		            <f:selectItem itemLabel="Het han" itemValue="Het han" />
 		        </p:selectOneMenu>
-    		<p:outputLabel value="Public: " /> 
+		        </f:facet>
+           </p:cellEditor>
+       </p:column>
+ 
+       <p:column headerText="Public"  sortBy="#{acc.isPublic}"  style="text-align:center;" layout="block"
+       filterBy="#{acc.isPublic}"  footerText=" " filterMatchMode="equals" >
+       		<f:facet name="filter">
+                <p:selectOneButton onchange="PF('accsTable').filter()">
+                    <f:converter converterId="javax.faces.Boolean" />
+                    <f:selectItem itemLabel="All" itemValue="" />
+                    <f:selectItem itemLabel="1" itemValue="true" />
+                    <f:selectItem itemLabel="0" itemValue="false" />
+                </p:selectOneButton>
+            </f:facet>	 
+           <p:cellEditor>
+               <f:facet name="output"><h:selectBooleanCheckbox value="#{acc.isPublic}" /> </f:facet>
+               <f:facet name="input"><h:selectBooleanCheckbox value="#{acc.isPublic}" /> </f:facet>
+           </p:cellEditor>
+       </p:column>
+ 
+       <p:column style="width:32px">
+           <p:rowEditor />
+            
+       </p:column> 
+       <p:column style="width:32px">
+           <h:commandButton value="x" action="#{bank.deleteAccount(acc)}"/>
+       </p:column>
+       
+   </p:dataTable>
+                     
+ 	<p:spacer height="30px;"/>
+ 		<p:growl id="messages" showDetail="true"/>
+            
+ 	<p:panelGrid columns="2">
+       	<p:outputLabel value="Name: " />
+ 		<p:inputText value="#{bank.name}" />
+ 		
+ 		<p:outputLabel value="Modifer Time: " />			  
+    			<p:calendar id="datetime" value="#{bank.modiferTime}" pattern="MM/dd/yyyy HH:mm:ss" />  	 
+ 		<p:outputLabel value="Status:" />
+    		 
+		        <p:selectOneMenu id="status" value="#{bank.status}"   >
+		            <f:selectItem itemLabel="Dang su dung" itemValue="Dang su dung" />
+		            <f:selectItem itemLabel="Tam khoa" itemValue="Tam khoa" />
+		            <f:selectItem itemLabel="Het han" itemValue="Het han" />
+		        </p:selectOneMenu>
+		        
+  		<p:outputLabel value="Public: " /> 
         		<p:selectBooleanButton id="isPublic" value="#{bank.isPublic}" onLabel="Yes" offLabel="No" onIcon="ui-icon-check" offIcon="ui-icon-close" style="width:90px"/>	
-			<p:outputLabel value=" " /> 
-                    <f:facet name="footer">
-                        <h:commandButton value="Add Account" action="#{bank.addAccount}"/>
-                    </f:facet>
-                </p:panelGrid>
+	 	<p:outputLabel value=" " /> 
+    			<f:facet name="footer">
+      				<h:commandButton value="Add Account" action="#{bank.addAccount}"/>
+         		</f:facet>
+ 	</p:panelGrid>
                 <p:spacer height="30px;"/>
-            </p:panel>
-        </h:form>
-    </h:body>
+ 	</p:panel>
+ 	</h:form>
+</h:body>
 </html>
